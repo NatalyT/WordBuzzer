@@ -25,14 +25,31 @@ class GameViewController: UIViewController {
     @IBAction func unwindToGameScreen(segue:UIStoryboardSegue) {
     }
     
+    @IBAction func tapPlayerOneButton(_ sender: Any) {
+        handleButtonTap(buttonTag: playerOneButton.tag)
+    }
+    
+    @IBAction func tapPlayerTwoButton(_ sender: Any) {
+        handleButtonTap(buttonTag: playerTwoButton.tag)
+    }
+    
+    @IBAction func tapPlayerThreeButton(_ sender: Any) {
+        handleButtonTap(buttonTag: playerThreeButton.tag)
+    }
+    
+    @IBAction func tapPlayerFourButton(_ sender: Any) {
+        handleButtonTap(buttonTag: playerFourButton.tag)
+    }
+    
     var labelTwo: UILabel?
     
     var wordsArrayFromJSON = [Word]()
-    let amountOfWords: Int = 3
+    let amountOfWords: Int = 5
     var amountOfShownWords: Int = 0
     var wordToShow: WordToShow?
     var wordsToShowArray = [WordToShow]()
-    var correctAnswers: Int = 0
+    var correctAnswers = [Int]()
+    var showNextWord: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,16 +57,14 @@ class GameViewController: UIViewController {
         if let w = Word.fetchJson() {
             wordsArrayFromJSON = w
         }
-        
-        playerOneButton.backgroundColor = .cyan
-        playerTwoButton.backgroundColor = .magenta
-        playerThreeButton.backgroundColor = .yellow
-        playerFourButton.backgroundColor = .blue
     }
     
     override func viewWillAppear(_ animated: Bool) {
         amountOfShownWords = 0
-        correctAnswers = 0
+        correctAnswers = []
+        for _ in 0 ... 3 {
+            correctAnswers.append(0)
+        }
         
         labelTwo = UILabel(frame: CGRect(x: -200, y: Int(self.view.frame.height / 2 + 25), width: 200, height: 27))
         labelTwo?.textAlignment = .right
@@ -57,7 +72,7 @@ class GameViewController: UIViewController {
         labelTwo?.backgroundColor = .clear
         labelTwo?.font = UIFont.systemFont(ofSize: 22)
         labelTwo?.numberOfLines = 0
-//        labelTwo?.sizeToFit()
+        //        labelTwo?.sizeToFit()
         self.view.addSubview(labelTwo!)
         
         getWordsToShow()
@@ -67,14 +82,40 @@ class GameViewController: UIViewController {
         self.labelTwo?.removeFromSuperview()
     }
     
+    func handleButtonTap(buttonTag: Int) {
+        showNextWord = true
+        if let w = self.wordToShow {
+            let correctAnswer = self.isCorrectAnswer(word: w)
+            updateUIView(correctAnswer: correctAnswer, buttonTag: buttonTag)
+        }
+    }
+    
+    func updateUIView(correctAnswer: Bool, buttonTag: Int) {
+        playerOneButton.isEnabled = false
+        playerTwoButton.isEnabled = false
+        playerThreeButton.isEnabled = false
+        playerFourButton.isEnabled = false
+        playerOneButton.backgroundColor = .gray
+        playerTwoButton.backgroundColor = .gray
+        playerThreeButton.backgroundColor = .gray
+        playerFourButton.backgroundColor = .gray
+        if correctAnswer {
+            labelOne.textColor = .green
+            labelTwo?.textColor = .green
+            self.correctAnswers[buttonTag] += 1
+        } else {
+            labelOne.textColor = .red
+            labelTwo?.textColor = .red
+            self.correctAnswers[buttonTag] -= 1
+        }
+    }
+    
     func getWordsToShow() {
-        labelOne.textColor = .gray
-        labelTwo?.textColor = .gray
         if amountOfShownWords < amountOfWords {
             amountOfShownWords += 1
             getWordToShow()
         } else {
-            performSegue(withIdentifier: "segueToFinalScene", sender: self)
+            performSegue(withIdentifier: "segueToFinalScreen", sender: self)
         }
     }
     
@@ -90,20 +131,31 @@ class GameViewController: UIViewController {
             randomNumber = Int.random(in: 0 ... 2)
             wordToShow = WordToShow(wordInLanguageOne: wordsArray[0].text_eng ?? "", wordInLanguageTwo: wordsArray[0].text_spa ?? "", wordToDisplay: wordsArray[randomNumber].text_spa ?? "")
             wordsToShowArray.append(wordToShow!)
-            print(wordToShow?.wordInLanguageOne as Any, "   ", wordToShow?.wordInLanguageTwo as Any, "   ", wordToShow?.wordToDisplay as Any)
         }
         showWord()
     }
     
     func showWord() {
+        labelOne.textColor = .gray
+        labelTwo?.textColor = .gray
+        playerOneButton.isEnabled = true
+        playerTwoButton.isEnabled = true
+        playerThreeButton.isEnabled = true
+        playerFourButton.isEnabled = true
+        playerOneButton.backgroundColor = .cyan
+        playerTwoButton.backgroundColor = .magenta
+        playerThreeButton.backgroundColor = .yellow
+        playerFourButton.backgroundColor = .blue
+        
         if wordsToShowArray.count > 0 {
             wordToShow = wordsToShowArray[0]
             wordsToShowArray.remove(at: 0)
             labelOne.text = wordToShow?.wordInLanguageOne
             labelTwo?.text = wordToShow?.wordToDisplay
             labelTwo?.frame = CGRect(x: -200, y: Int(self.view.frame.height / 2 + 25), width: 200, height: 27)
-//            self.view.layoutIfNeeded()
             self.addAnimation()
+        } else {
+            getWordsToShow()
         }
     }
     
@@ -111,21 +163,28 @@ class GameViewController: UIViewController {
         DispatchQueue.main.async {
             UIView.animate(withDuration: 5.0, delay: 0.0, options: .curveEaseInOut, animations: {
                 self.labelTwo?.center.x = self.view.frame.width + 200
-//                self.view.layoutIfNeeded()
             }, completion: { (finished: Bool) in
-                self.showWord()
+                if self.showNextWord {
+                    self.showNextWord = false
+                    self.getWordsToShow()
+                } else {
+                    self.showWord()
+                }
             })
         }
     }
     
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destination.
-     // Pass the selected object to the new view controller.
-     }
-     */
+    func isCorrectAnswer(word: WordToShow) -> Bool {
+        return word.wordInLanguageTwo == word.wordToDisplay
+    }
     
+    // MARK: - Navigation
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "segueToFinalScreen" {
+            if let destinationVC = segue.destination as? FinalViewController {
+                destinationVC.correctAnswers = correctAnswers
+            }
+        }
+    }
 }
