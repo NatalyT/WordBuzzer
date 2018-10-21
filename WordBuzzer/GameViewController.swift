@@ -21,8 +21,16 @@ class GameViewController: UIViewController {
     
     var labelTwo: UILabel?
     
+    var wordsArrayFromJSON = [Word]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if let w = Word.fetchJson() {
+            wordsArrayFromJSON = w
+        }
+        print(wordsArrayFromJSON as Any)
+        
         playerOneButton.backgroundColor = .cyan
         playerTwoButton.backgroundColor = .magenta
         playerThreeButton.backgroundColor = .yellow
