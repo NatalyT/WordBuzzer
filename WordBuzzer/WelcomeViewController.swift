@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  WelcomeViewController.swift
 //  WordBuzzer
 //
 //  Created by Nataly Tatarintseva on 10/21/18.
@@ -8,11 +8,13 @@
 
 import UIKit
 
-class ViewController: UIViewController {
-
+class WelcomeViewController: UIViewController {
+    
+    @IBOutlet weak var welcomeLabel: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        welcomeLabel.text = "Welcome" + "\n" + "to" + "\n" + "WordBuzzer"
     }
 
 
