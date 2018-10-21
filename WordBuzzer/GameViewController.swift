@@ -43,6 +43,8 @@ class GameViewController: UIViewController {
     
     var labelTwo: UILabel?
     
+    let labelWidth = 250
+    let labelHeight = 32
     var wordsArrayFromJSON = [Word]()
     let amountOfWords: Int = 5
     var amountOfShownWords: Int = 0
@@ -66,11 +68,11 @@ class GameViewController: UIViewController {
             correctAnswers.append(0)
         }
         
-        labelTwo = UILabel(frame: CGRect(x: -200, y: Int(self.view.frame.height / 2 + 25), width: 200, height: 27))
+        labelTwo = UILabel(frame: CGRect(x: -labelWidth, y: Int(self.view.frame.height / 2 + 25), width: labelWidth, height: labelHeight))
         labelTwo?.textAlignment = .right
         labelTwo?.text = "LabelTwo"
         labelTwo?.backgroundColor = .clear
-        labelTwo?.font = UIFont.systemFont(ofSize: 22)
+        labelTwo?.font = UIFont.systemFont(ofSize: 28)
         labelTwo?.numberOfLines = 0
         //        labelTwo?.sizeToFit()
         self.view.addSubview(labelTwo!)
@@ -131,6 +133,7 @@ class GameViewController: UIViewController {
             randomNumber = Int.random(in: 0 ... 2)
             wordToShow = WordToShow(wordInLanguageOne: wordsArray[0].text_eng ?? "", wordInLanguageTwo: wordsArray[0].text_spa ?? "", wordToDisplay: wordsArray[randomNumber].text_spa ?? "")
             wordsToShowArray.append(wordToShow!)
+            print(wordToShow?.wordInLanguageOne as Any, "   ", wordToShow?.wordInLanguageTwo as Any, "   ", wordToShow?.wordToDisplay as Any)
         }
         showWord()
     }
@@ -152,7 +155,7 @@ class GameViewController: UIViewController {
             wordsToShowArray.remove(at: 0)
             labelOne.text = wordToShow?.wordInLanguageOne
             labelTwo?.text = wordToShow?.wordToDisplay
-            labelTwo?.frame = CGRect(x: -200, y: Int(self.view.frame.height / 2 + 25), width: 200, height: 27)
+            labelTwo?.frame = CGRect(x: -labelWidth, y: Int(self.view.frame.height / 2 + 25), width: labelWidth, height: labelHeight)
             self.addAnimation()
         } else {
             getWordsToShow()
@@ -162,7 +165,7 @@ class GameViewController: UIViewController {
     func addAnimation() {
         DispatchQueue.main.async {
             UIView.animate(withDuration: 5.0, delay: 0.0, options: .curveEaseInOut, animations: {
-                self.labelTwo?.center.x = self.view.frame.width + 200
+                self.labelTwo?.center.x = self.view.frame.width + CGFloat(self.labelWidth)
             }, completion: { (finished: Bool) in
                 if self.showNextWord {
                     self.showNextWord = false
