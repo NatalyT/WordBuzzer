@@ -9,22 +9,18 @@
 import UIKit
 
 class FinalViewController: UIViewController {
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+    
+    @IBOutlet weak var playerOneResult: UILabel!
+    @IBOutlet weak var playerFourResult: UILabel!
+    @IBOutlet weak var playerThreeResult: UILabel!
+    @IBOutlet weak var playerTwoResult: UILabel!
+    
+    @IBAction func playAgain(_ sender: Any) {
+        performSegue(withIdentifier: "unwindSegueToGameScreen", sender: self)
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    override func viewDidLoad() {
+        super.viewDidLoad()
     }
-    */
-
+    
 }

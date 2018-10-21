@@ -16,7 +16,7 @@ class WelcomeViewController: UIViewController {
         super.viewDidLoad()
         welcomeLabel.text = "Welcome" + "\n" + "to" + "\n" + "WordBuzzer"
     }
-
-
+    
+    
 }
 
