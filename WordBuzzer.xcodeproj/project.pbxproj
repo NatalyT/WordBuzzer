@@ -37,6 +37,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C103D3FF217CDA730012F2E9 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		C18E354E217C742C005B3CF5 /* WordBuzzer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WordBuzzer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C18E3551217C742C005B3CF5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C18E3553217C742C005B3CF5 /* WelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
@@ -112,6 +113,7 @@
 				C18E355A217C742E005B3CF5 /* LaunchScreen.storyboard */,
 				C18E355D217C742E005B3CF5 /* Info.plist */,
 				C18E3583217C8E9D005B3CF5 /* Word.swift */,
+				C103D3FF217CDA730012F2E9 /* README.md */,
 			);
 			path = WordBuzzer;
 			sourceTree = "<group>";
